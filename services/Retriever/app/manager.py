@@ -12,7 +12,7 @@ class Manager:
         self.producer = Producer()
 
 
-    def run(self, interval = 10):
+    def run(self, interval = 1000):
         publish_topic_antisemitic = os.getenv("preprocessed_tweets_antisemitic", "raw_tweets_antisemitic")
         publish_topic_not_antisemitic = os.getenv("preprocessed_tweets_not_antisemitic", "raw_tweets_not_antisemitic")
         print(f"publishing to {publish_topic_antisemitic}.")
@@ -21,7 +21,7 @@ class Manager:
         counter = 0 # start counter to skip to prevent duplicate retrievals
         while True:
             print(f"new interval...")
-            data = self.dal.get_data(counter, amount_per_pull=100)
+            data = self.dal.get_data(counter, amount_per_pull=1)
             counter += 1
             print(f"fetched {len(data)} msgs.")
             antisemitic, not_antisemitic = classify_antisemitic(data)

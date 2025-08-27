@@ -1,5 +1,7 @@
 from consumer import Consumer
 from producer import Producer
+from cleaner import Cleaner
+from text_processor import TextProcessor
 import threading
 import os
 
@@ -30,10 +32,24 @@ class Manager:
             print("new massage:")
             print(f"topic: {event.topic}")
             print(event)
-            processed_event = self.process_event(event)
-            self.producer.publish_event(publish_topic, processed_event)
+            processed_document = self.process_event(event)
+            self.producer.publish_event(publish_topic, processed_document)
 
     def process_event(self, event):
-        processed_event = event.value
-        return processed_event
+        doc = event.value
+        doc["original_text"] = doc.pop("text")
+
+        cleaner = Cleaner(doc['original_text'])
+        cleaner.remove_punctuation_and_special_characters()
+        cleaner.remove_white_spaces()
+        cleaned_text = cleaner.get_data()
+
+        txt_processor = TextProcessor(cleaned_text)
+        txt_processor.remove_stop_words()
+        txt_processor.lower_words()
+        txt_processor.lemmatize_words()
+        processed_txt = txt_processor.get_data()
+
+        doc['clean_text'] = processed_txt
+        return doc
 
