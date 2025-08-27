@@ -10,16 +10,16 @@ class Manager:
         self.producer = Producer()
 
     def run(self):
-        raw_tweets_antisemitic = os.getenv("ROW_TWEETS_ANTISEMITIC", "raw_tweets_antisemitic")
-        raw_tweets_not_antisemitic = os.getenv("ROW_TWEETS_NOT_ANTISEMITIC", "raw_tweets_not_antisemitic")
+        consume_topic_antisemitic = os.getenv("ROW_TWEETS_ANTISEMITIC", "raw_tweets_antisemitic")
+        consume_topic_not_antisemitic = os.getenv("ROW_TWEETS_NOT_ANTISEMITIC", "raw_tweets_not_antisemitic")
 
-        preprocessed_tweets_antisemitic = os.getenv("preprocessed_tweets_antisemitic", "preprocessed_tweets_antisemitic")
-        preprocessed_tweets_not_antisemitic = os.getenv("preprocessed_tweets_not_antisemitic", "preprocessed_tweets_not_antisemitic")
+        publish_topic_antisemitic = os.getenv("preprocessed_tweets_antisemitic", "preprocessed_tweets_antisemitic")
+        publish_topic_not_antisemitic = os.getenv("preprocessed_tweets_not_antisemitic", "preprocessed_tweets_not_antisemitic")
 
-        antisemitic = threading.Thread(target=self.start_listening, args=(raw_tweets_antisemitic, preprocessed_tweets_antisemitic), daemon=True)
+        antisemitic = threading.Thread(target=self.start_listening, args=(consume_topic_antisemitic, publish_topic_antisemitic), daemon=True)
         antisemitic.start()
 
-        not_antisemitic = threading.Thread(target=self.start_listening, args=(raw_tweets_not_antisemitic, preprocessed_tweets_not_antisemitic), daemon=True)
+        not_antisemitic = threading.Thread(target=self.start_listening, args=(consume_topic_not_antisemitic, publish_topic_not_antisemitic), daemon=True)
         not_antisemitic.start()
 
     def start_listening(self, consume_topic, publish_topic):
