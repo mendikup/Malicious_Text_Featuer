@@ -10,8 +10,8 @@ class Manager:
         self.producer = Producer()
 
     def run(self):
-        consume_topic_antisemitic = os.getenv("ROW_TWEETS_ANTISEMITIC", "preprocessed_tweets_antisemitic")
-        consume_topic_not_antisemitic = os.getenv("ROW_TWEETS_NOT_ANTISEMITIC", "preprocessed_tweets_not_antisemitic")
+        consume_topic_antisemitic = os.getenv("PREPROCESSED_TWEETS_ANTISEMITIC", "preprocessed_tweets_antisemitic")
+        consume_topic_not_antisemitic = os.getenv("PREPROCESSED_TWEETS_NOT_ANTISEMITIC", "preprocessed_tweets_not_antisemitic")
 
         publish_topic_antisemitic = os.getenv("preprocessed_tweets_antisemitic", "enriched_preprocessed_tweets_antisemitic")
         publish_topic_not_antisemitic = os.getenv("preprocessed_tweets_not_antisemitic", "enriched_preprocessed_tweets_not_antisemitic")

@@ -14,7 +14,7 @@ class Producer:
 
     def publish_event(self, topic, event) -> None:
         """
-        publish an event to a specific topic on the liked kafka server
+        publish an event to a specific topic on the linked kafka server
         :param event: the event to upload
         :param topic: the specified topic
         """
