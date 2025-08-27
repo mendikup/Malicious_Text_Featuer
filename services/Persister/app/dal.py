@@ -25,3 +25,10 @@ class Dal:
             if result.inserted_id:
                 return {"msg": f"inserted successfully. _id: {result.inserted_id}"}
             return {"msg": "there is is a problem inserting the data"}
+
+    def drop_table(self, name):
+        uri = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+        with MongoClient(uri) as client:
+            self.db = client[self.database]
+            self.db.drop_collection(name)
+

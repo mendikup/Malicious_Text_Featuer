@@ -1,19 +1,16 @@
 from pymongo import MongoClient
 import os
-from dotenv import load_dotenv
 
 
 class Dal:
     """Retrieve documents from a MongoDB collection."""
 
-    load_dotenv()
-
     def __init__(self):
-        self.USER = os.getenv("USER")
-        self.DB_NAME = os.getenv("DB_NAME")
-        self.PASS = os.getenv("PASS")
-        self.COLLECTION = os.getenv("COLLECTION")
-        self.MONGO_URI = os.getenv("MONGO_URI")
+        self.USER = os.getenv("USER", "IRGC_NEW")
+        self.DB_NAME = os.getenv("DB_NAME", "IranMalDB")
+        self.PASS = os.getenv("PASS", "iran135")
+        self.COLLECTION = os.getenv("COLLECTION", "tweets")
+        self.MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://IRGC_NEW:iran135@cluster0.6ycjkak.mongodb.net/")
 
 
         # Check if any critical environment variables are missing
@@ -27,13 +24,16 @@ class Dal:
         if missing:
             raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
 
-        # Build the MongoDB connection URI
-        self.MONGO_URI = (self.MONGO_URI)
 
-    def get_data(self, counter):
+    def get_data(self, counter, amount_per_pull = 100):
         with MongoClient(self.MONGO_URI) as client:
             db = client[self.DB_NAME]
             collection = db[self.COLLECTION]
-            raw_data = list(collection.find({}).sort("CreateDate").skip(counter).limit(100))
+            raw_data = list(
+                collection.find({})
+                .sort("CreateDate")
+                .skip(counter * amount_per_pull)
+                .limit(amount_per_pull)
+            )
             return raw_data
 

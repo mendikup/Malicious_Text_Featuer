@@ -24,6 +24,8 @@ class Manager:
 
     def start_listening(self, consume_topic, collection_to_save):
         print(f"Started listening to topic: {consume_topic}, inserting to {collection_to_save} collection.")
+
+        self.dal.drop_table(collection_to_save)
         events = self.consumer.get_consumer_events(consume_topic)
 
         for event in events:
