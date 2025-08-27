@@ -1,11 +1,9 @@
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
-import json
-from services.retriever.urils.utils_function import convert_bson_types
 
 
-class DAL:
+class Dal:
     """Retrieve documents from a MongoDB collection."""
 
     load_dotenv()
@@ -32,14 +30,10 @@ class DAL:
         # Build the MongoDB connection URI
         self.MONGO_URI = (self.MONGO_URI)
 
-    def get_all_data(self):
+    def get_data(self, counter):
         with MongoClient(self.MONGO_URI) as client:
             db = client[self.DB_NAME]
             collection = db[self.COLLECTION]
-            # Return all documents
-            res = list(collection.find({}).limit(5))
-            return res
-
-
-
+            raw_data = list(collection.find({}).sort("CreateDate").skip(counter).limit(100))
+            return raw_data
 

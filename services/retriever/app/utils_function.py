@@ -17,3 +17,14 @@ def convert_bson_types(obj):
         return str(obj)
     else:
         return obj
+
+
+def classify_antisemitic(data):
+    antisemitic = []
+    not_antisemitic = []
+    for document in data:
+        if document["Antisemitic"]:
+            antisemitic.append(document)
+        else:
+            not_antisemitic.append(document)
+    return antisemitic, not_antisemitic
