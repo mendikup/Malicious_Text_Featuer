@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preprocessor
+  namespace: avigoldshtein-dev
+spec:
+  selector:
+    matchLabels:
+      app: preprocessor
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: preprocessor
+    spec:
+      containers:
+      - image: avigoldshtein/preprocessor:latest
+        name: preprocessor
+        imagePullPolicy: Always
+        env:
+          - name: KAFKA_BOOTSTRAP
+            value: kafka:9092
+        ports:
+        - containerPort: 8001
+          name: preprocessor
