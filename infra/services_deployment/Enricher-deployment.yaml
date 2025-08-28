@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enricher
+  namespace: avigoldshtein-dev
+spec:
+  selector:
+    matchLabels:
+      app: enricher
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: enricher
+    spec:
+      containers:
+      - image: avigoldshtein/enricher:latest
+        name: enricher
+        imagePullPolicy: Always
+        env:
+          - name: KAFKA_BOOTSTRAP
+            value: kafka:9092
+        ports:
+        - containerPort: 8002
+          name: enricher

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: persister
+  namespace: avigoldshtein-dev
+spec:
+  selector:
+    matchLabels:
+      app: persister
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: persister
+    spec:
+      containers:
+      - image: avigoldshtein/persister:latest
+        name: persister
+        imagePullPolicy: Always
+        env:
+          - name: KAFKA_BOOTSTRAP
+            value: kafka:9092
+          - name: MONGO_URI
+            value: mongodb://mongo:27017
+          - name: MONGO_DB
+            value: mydb
+        ports:
+        - containerPort: 8003
+          name: persister

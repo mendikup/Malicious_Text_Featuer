@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-retrieval
+  namespace: avigoldshtein-dev
+spec:
+  selector:
+    matchLabels:
+      app: data-retrieval
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: data-retrieval
+    spec:
+      containers:
+      - image: avigoldshtein/data-retrieval:latest
+        name: data-retrieval
+        imagePullPolicy: Always
+        env:
+          - name: MONGO_URI
+            value: mongodb://mongo:27017
+          - name: MONGO_DB
+            value: mydb
+        ports:
+        - containerPort: 8004
+          name: data-retrieval
