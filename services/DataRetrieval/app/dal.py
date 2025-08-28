@@ -11,9 +11,8 @@ class Dal:
     def __init__(self):
         self.ANTISEMITIC_COLLECTION = os.getenv("ANTISEMITIC_COLLECTION","tweets_antisemitic")
         self.NOT_ANTISEMITIC_COLLECTION = os.getenv("NOT_ANTISEMITIC_COLLECTION","tweets_not_antisemitic")
-        self.DB_NAME = os.getenv("DB_NAME","mydb")
-        self.MY_MONGO_URI = os.getenv("MY_MONGO_URI","mongodb://localhost:27017")
-
+        self.DB_NAME = os.getenv("MONGO_DB","mydb")
+        self.MY_MONGO_URI = os.getenv("MONGO_URI","mongodb://localhost:27017")
 
 
     def get_not_antisemitic_data(self):
