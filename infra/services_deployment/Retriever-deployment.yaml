@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: retriever
+  namespace: avigoldshtein-dev
+spec:
+  selector:
+    matchLabels:
+      app: retriever
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: retriever
+    spec:
+      containers:
+      - image: avigoldshtein/data-retrieval:latest
+        name: retriever
+        imagePullPolicy: Always
+        env:
+          - name: KAFKA_BOOTSTRAP
+            value: kafka:9092
+        ports:
+        - containerPort: 8000
+          name: retriever
