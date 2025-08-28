@@ -1,12 +1,8 @@
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, wordnet
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
 import nltk
-
-# Force load stopwords before threads start
-_ = stopwords.words("english")
-
 
 resources = {
     'stopwords': 'corpora/stopwords',
@@ -15,13 +11,21 @@ resources = {
     'wordnet': 'corpora/wordnet',
     'omw-1.4': 'corpora/omw-1.4',
     'averaged_perceptron_tagger_eng': 'taggers/averaged_perceptron_tagger_eng',
+    'vader_lexicon': 'sentiment/vader_lexicon',
 }
 
+# Download if missing
 for name, path in resources.items():
     try:
         nltk.data.find(path)
     except LookupError:
         nltk.download(name)
+
+# Force-load corpora to avoid LazyLoader bugs
+_ = stopwords.words("english")
+_ = wordnet.synsets("dog")  # מפעיל את wordnet וה־omw
+lemmatizer = WordNetLemmatizer()
+_ = lemmatizer.lemmatize("dogs")
 
 
 
