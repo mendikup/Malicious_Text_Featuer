@@ -19,3 +19,13 @@ docker build -t avigoldshtein/data-retrieval DataRetrieval/
 docker run --name data-retrieval -e MONGO_URI=mongodb://mongo:27017 -e MONGO_DB=mydb -d -p 8004:8004 --network malicious-net avigoldshtein/data-retrieval:latest
 
 
+
+
+
+
+@REM push to docker hub
+docker push avigoldshtein/retriever:latest
+docker push avigoldshtein/persister:latest
+docker push avigoldshtein/enricher:latest
+docker push avigoldshtein/persister:latest
+docker push avigoldshtein/data-retrieval:latest
