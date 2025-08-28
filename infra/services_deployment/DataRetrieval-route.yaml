@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: data-retrieval
+  namespace: avigoldshtein-dev
+spec:
+  to:
+    kind: Service
+    name: data-retrieval
+  port:
+    targetPort: 8004
+  tls:
+    termination: edge
