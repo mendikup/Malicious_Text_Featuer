@@ -11,7 +11,7 @@ class Dal:
         self.db = None
         self.database = os.getenv("MONGO_DB", "mydb")
 
-    def insert_document(self, collection_name, document) -> dict:
+    def insert_document(self, collection_name, document):
         """
         insert a new document into the collection
         :param collection_name:
