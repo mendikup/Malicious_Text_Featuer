@@ -12,10 +12,10 @@ docker run --name enricher -d -e KAFKA_BOOTSTRAP=kafka:9092 -p 8002:8002 --netwo
 
 
 docker build -t avigoldshtein/persister Persister/
-docker run --name persister -d -e MONGO_URI=mongodb://mongo:27017 -e MONGO_DB=mydb -p 8003:8003 --network malicious-net avigoldshtein/persister:latest
+docker run --name persister -d -e KAFKA_BOOTSTRAP=kafka:9092 -e MONGO_URI=mongodb://mongo:27017 -e MONGO_DB=mydb -p 8003:8003 --network malicious-net avigoldshtein/persister:latest
 
 
 docker build -t avigoldshtein/data-retrieval DataRetrieval/
-docker run --name data-retrieval -d -p 8004:8004 --network malicious-net avigoldshtein/persister:latest
+docker run --name data-retrieval -e MONGO_URI=mongodb://mongo:27017 -e MONGO_DB=mydb -d -p 8004:8004 --network malicious-net avigoldshtein/data-retrieval:latest
 
 
