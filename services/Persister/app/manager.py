@@ -10,8 +10,8 @@ class Manager:
         self.dal = Dal()
 
     def run(self):
-        consume_topic_antisemitic = os.getenv("ROW_TWEETS_ANTISEMITIC", "preprocessed_tweets_antisemitic")
-        consume_topic_not_antisemitic = os.getenv("ROW_TWEETS_NOT_ANTISEMITIC", "preprocessed_tweets_not_antisemitic")
+        consume_topic_antisemitic = os.getenv("ROW_TWEETS_ANTISEMITIC", "enriched_preprocessed_tweets_antisemitic")
+        consume_topic_not_antisemitic = os.getenv("ROW_TWEETS_NOT_ANTISEMITIC", "enriched_preprocessed_tweets_not_antisemitic")
 
         antisemitic_collection = os.getenv("###", "tweets_antisemitic")
         not_antisemitic_collection = os.getenv("@@@", "tweets_not_antisemitic")
@@ -29,13 +29,12 @@ class Manager:
         events = self.consumer.get_consumer_events(consume_topic)
 
         for event in events:
-            print("new massage:")
-            print(f"topic: {event.topic}")
-            print(event)
-            processed_event = self.process_event(event)
-            self.dal.insert_document(collection_to_save, processed_event)
+            processed_document = self.process_event(event)
+            print(f"persister saving to collection: {collection_to_save}")
+            print(processed_document)
+            self.dal.insert_document(collection_to_save, processed_document)
 
     def process_event(self, event):
-        processed_event = event.value
-        return processed_event
+        processed_document = event.value
+        return processed_document
 

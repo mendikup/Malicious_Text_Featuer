@@ -1,5 +1,6 @@
 from consumer import Consumer
 from producer import Producer
+from analyzer import Analyzer
 import threading
 import os
 
@@ -27,13 +28,20 @@ class Manager:
         events = self.consumer.get_consumer_events(consume_topic)
 
         for event in events:
-            print("new massage:")
-            print(f"topic: {event.topic}")
-            print(event)
-            processed_event = self.process_event(event)
-            self.producer.publish_event(publish_topic, processed_event)
+            processed_document = self.process_event(event)
+            print(f"enricher publishing to topic: {publish_topic}")
+            print(processed_document)
+            self.producer.publish_event(publish_topic, processed_document)
 
     def process_event(self, event):
-        processed_event = event.value
-        return processed_event
+        doc = event.value
+        original_text = doc['original_text']
+        sentiment = Analyzer.find_sentiment(original_text)
+        weapons_detected = Analyzer.detect_weapons(original_text)
+        relevant_timestamp = Analyzer.find_relevant_timestamp(original_text)
+
+        doc['sentiment'] = sentiment
+        doc['weapons_detected'] = weapons_detected
+        doc['relevant_timestamp'] = relevant_timestamp
+        return doc
 

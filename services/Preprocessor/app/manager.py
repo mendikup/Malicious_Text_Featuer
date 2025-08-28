@@ -29,10 +29,9 @@ class Manager:
         events = self.consumer.get_consumer_events(consume_topic)
 
         for event in events:
-            print("new massage:")
-            print(f"topic: {event.topic}")
-            print(event)
             processed_document = self.process_event(event)
+            print(f"preprocessor publishing to topic: {publish_topic}")
+            print(processed_document)
             self.producer.publish_event(publish_topic, processed_document)
 
     def process_event(self, event):

@@ -32,4 +32,6 @@ class Manager:
     def publish_tweets(self,topic, data):
         for document in data:
             document = convert_bson_types(document)
+            print(f"retriever publishing to topic: {topic}")
+            print(document)
             self.producer.publish_event(topic, document)
