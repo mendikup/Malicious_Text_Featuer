@@ -1,5 +1,4 @@
 import os
-import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import re
 import pandas as pd
@@ -57,7 +56,7 @@ class Analyzer:
         if matches:
             matches = pd.Series(matches)
             matches = pd.to_datetime(matches)
-            return  matches.max()
+            return  str(matches.max())
         return ""
 
 

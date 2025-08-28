@@ -1,24 +1,28 @@
-import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
 import nltk
 
-resources = [
-    'stopwords',
-    'punkt',
-    'punkt_tab',
-    'wordnet',
-    'omw-1.4',
-    'averaged_perceptron_tagger_eng'
-]
+# Force load stopwords before threads start
+_ = stopwords.words("english")
 
-for res in resources:
+
+resources = {
+    'stopwords': 'corpora/stopwords',
+    'punkt': 'tokenizers/punkt',
+    'punkt_tab': 'tokenizers/punkt_tab',
+    'wordnet': 'corpora/wordnet',
+    'omw-1.4': 'corpora/omw-1.4',
+    'averaged_perceptron_tagger_eng': 'taggers/averaged_perceptron_tagger_eng',
+}
+
+for name, path in resources.items():
     try:
-        nltk.data.find(res)
+        nltk.data.find(path)
     except LookupError:
-        nltk.download(res)
+        nltk.download(name)
+
 
 
 
