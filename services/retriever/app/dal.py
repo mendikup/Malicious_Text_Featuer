@@ -16,19 +16,6 @@ class Dal:
         self.MONGO_URI = os.getenv("MONGO_URI")
 
 
-        # Check if any critical environment variables are missing
-        missing = [
-            name for name, val in [
-                ("USER", self.USER),
-                ("PASS", self.PASS),
-                ("DB_NAME", self.DB_NAME),
-            ] if not val
-        ]
-        if missing:
-            raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
-
-        # Build the MongoDB connection URI
-        self.MONGO_URI = (self.MONGO_URI)
 
     def get_data(self, counter):
         with MongoClient(self.MONGO_URI) as client:
