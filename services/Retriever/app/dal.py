@@ -12,7 +12,6 @@ class Dal:
         self.COLLECTION = os.getenv("COLLECTION", "tweets")
         self.MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://IRGC_NEW:iran135@cluster0.6ycjkak.mongodb.net/")
 
-
         # Check if any critical environment variables are missing
         missing = [
             name for name, val in [

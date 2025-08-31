@@ -11,20 +11,43 @@ class Manager:
         self.producer = Producer()
 
     def run(self):
-        consume_topic_antisemitic = os.getenv("PREPROCESSED_TWEETS_ANTISEMITIC", "preprocessed_tweets_antisemitic")
-        consume_topic_not_antisemitic = os.getenv("PREPROCESSED_TWEETS_NOT_ANTISEMITIC", "preprocessed_tweets_not_antisemitic")
+        """Start listening on both antisemitic and non-antisemitic topics."""
+        consume_topic_antisemitic = os.getenv(
+            "PREPROCESSED_TWEETS_ANTISEMITIC", "preprocessed_tweets_antisemitic"
+        )
+        consume_topic_not_antisemitic = os.getenv(
+            "PREPROCESSED_TWEETS_NOT_ANTISEMITIC",
+            "preprocessed_tweets_not_antisemitic",
+        )
 
-        publish_topic_antisemitic = os.getenv("preprocessed_tweets_antisemitic", "enriched_preprocessed_tweets_antisemitic")
-        publish_topic_not_antisemitic = os.getenv("preprocessed_tweets_not_antisemitic", "enriched_preprocessed_tweets_not_antisemitic")
+        publish_topic_antisemitic = os.getenv(
+            "ENRICHED_PREPROCESSED_TWEETS_ANTISEMITIC",
+            "enriched_preprocessed_tweets_antisemitic",
+        )
+        publish_topic_not_antisemitic = os.getenv(
+            "ENRICHED_PREPROCESSED_TWEETS_NOT_ANTISEMITIC",
+            "enriched_preprocessed_tweets_not_antisemitic",
+        )
 
-        antisemitic = threading.Thread(target=self.start_listening, args=(consume_topic_antisemitic, publish_topic_antisemitic), daemon=True)
+        antisemitic = threading.Thread(
+            target=self.start_listening,
+            args=(consume_topic_antisemitic, publish_topic_antisemitic),
+            daemon=True,
+        )
         antisemitic.start()
 
-        not_antisemitic = threading.Thread(target=self.start_listening, args=(consume_topic_not_antisemitic, publish_topic_not_antisemitic), daemon=True)
+        not_antisemitic = threading.Thread(
+            target=self.start_listening,
+            args=(consume_topic_not_antisemitic, publish_topic_not_antisemitic),
+            daemon=True,
+        )
         not_antisemitic.start()
 
-    def start_listening(self, consume_topic, publish_topic):
-        print(f"Started listening to topic: {consume_topic}, publishing to: {publish_topic}.")
+    def start_listening(self, consume_topic: str, publish_topic: str) -> None:
+        """Consume events from *consume_topic* and publish processed data."""
+        print(
+            f"Started listening to topic: {consume_topic}, publishing to: {publish_topic}."
+        )
         events = self.consumer.get_consumer_events(consume_topic)
 
         for event in events:
@@ -34,6 +57,7 @@ class Manager:
             self.producer.publish_event(publish_topic, processed_document)
 
     def process_event(self, event):
+        """Add enrichment data to the consumed *event* and return it."""
         doc = event.value
         original_text = doc['original_text']
         sentiment = Analyzer.find_sentiment(original_text)

@@ -19,10 +19,16 @@ spec:
         name: data-retrieval
         imagePullPolicy: Always
         env:
+          - name: KAFKA_BOOTSTRAP
+          - value: kafka:9092
           - name: MONGO_URI
-            value: mongodb://mongo:27017
+            value: mongodb://mongo:27017 # MongoDB connection string
           - name: MONGO_DB
-            value: mydb
+            value: mydb # MongoDB database
+          - name: ANTISEMITIC_COLLECTION
+            value: tweets_antisemitic # collection for antisemitic tweets
+          - name: NOT_ANTISEMITIC_COLLECTION
+            value: tweets_not_antisemitic # collection for non-antisemitic tweets
         ports:
         - containerPort: 8004
           name: data-retrieval

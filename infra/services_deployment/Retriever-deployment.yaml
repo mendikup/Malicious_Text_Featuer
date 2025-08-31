@@ -19,8 +19,22 @@ spec:
         name: retriever
         imagePullPolicy: Always
         env:
-          - name: KAFKA_BOOTSTRAP
-            value: kafka:9092
-        ports:
+      - name: KAFKA_BOOTSTRAP
+        value: kafka:9092 # Kafka broker address
+      - name: RAW_TWEETS_ANTISEMITIC
+        value: raw_tweets_antisemitic # topic for antisemitic tweets
+      - name: RAW_TWEETS_NOT_ANTISEMITIC
+        value: raw_tweets_not_antisemitic # topic for non-antisemitic tweets
+      - name: USER
+        value: IRGC_NEW # MongoDB username
+      - name: PASS
+        value: iran135 # MongoDB password
+      - name: DB_NAME
+        value: IranMalDB # MongoDB database
+      - name: COLLECTION
+        value: tweets # MongoDB collection
+      - name: MONGO_URI
+        value: mongodb://mongo:27017 # MongoDB connection string
+      ports:
         - containerPort: 8000
           name: retriever

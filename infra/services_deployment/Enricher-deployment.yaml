@@ -15,12 +15,20 @@ spec:
         app: enricher
     spec:
       containers:
-      - image: avigoldshtein/enricher:latest
-        name: enricher
-        imagePullPolicy: Always
-        env:
-          - name: KAFKA_BOOTSTRAP
-            value: kafka:9092
-        ports:
-        - containerPort: 8002
+        - image: avigoldshtein/enricher:latest
           name: enricher
+          imagePullPolicy: Always
+          env:
+            - name: KAFKA_BOOTSTRAP
+              value: kafka:9092 # Kafka broker address
+            - name: PREPROCESSED_TWEETS_ANTISEMITIC
+              value: preprocessed_tweets_antisemitic # input topic for cleaned antisemitic tweets
+            - name: PREPROCESSED_TWEETS_NOT_ANTISEMITIC
+              value: preprocessed_tweets_not_antisemitic # input topic for cleaned non-antisemitic tweets
+            - name: ENRICHED_PREPROCESSED_TWEETS_ANTISEMITIC
+              value: enriched_preprocessed_tweets_antisemitic # output topic for enriched antisemitic tweets
+            - name: ENRICHED_PREPROCESSED_TWEETS_NOT_ANTISEMITIC
+              value: enriched_preprocessed_tweets_not_antisemitic # output topic for enriched non-antisemitic tweets
+          ports:
+          - containerPort: 8002
+            name: enricher

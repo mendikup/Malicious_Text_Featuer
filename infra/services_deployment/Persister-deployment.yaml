@@ -24,7 +24,12 @@ spec:
           - name: MONGO_URI
             value: mongodb://mongo:27017
           - name: MONGO_DB
-            value: mydb
-        ports:
-        - containerPort: 8003
-          name: persister
+            value: mydb # MongoDB database
+          - name: ENRICHED_PREPROCESSED_TWEETS_ANTISEMITIC
+            value: enriched_preprocessed_tweets_antisemitic # topic for enriched antisemitic tweets
+          - name: ENRICHED_PREPROCESSED_TWEETS_NOT_ANTISEMITIC
+            value: enriched_preprocessed_tweets_not_antisemitic # topic for enriched non-antisemitic tweets
+          - name: ANTISEMITIC_COLLECTION
+            value: tweets_antisemitic # collection for antisemitic tweets
+          - name: NOT_ANTISEMITIC_COLLECTION
+            value: tweets_not_antisemitic # collection for non-antisemitic tweets

@@ -5,31 +5,27 @@ import pandas as pd
 
 
 def load_black_list():
-    """
-    loads the weapon lists from a txt file
-    return: list of the lines in the text
-    """
+    """Load a list of weapons from a text file."""
     base_path = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(base_path, "weapons.txt")
     with open(path, mode="r", encoding="utf-8") as f:
         data = f.read()
     return data.splitlines()
 
+# load black list once at module import
+black_list = load_black_list()
+
 
 
 class Analyzer:
-
-
+    """Provide basic NLP utilities for enrichment."""
 
     @staticmethod
     def find_sentiment(txt) -> str:
-        """find the sentiment of text
-        param: text
-        return: str of sentiment
-        """
+        """Return sentiment label for *txt* using VADER."""
 
         score = SentimentIntensityAnalyzer().polarity_scores(txt)
-        compound = score['compound']
+        compound = score["compound"]
         if compound <= -0.5:
             return "negative"
 
@@ -41,7 +37,7 @@ class Analyzer:
 
     @staticmethod
     def detect_weapons(txt: str) -> list:
-        black_list = load_black_list()
+        """Return a list of weapon names found in *txt*."""
         weapons_detected = []
         for word in txt.lower().split():
             if word in black_list:

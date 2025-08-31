@@ -1,0 +1,142 @@
+# Use a modern version of the Docker Compose file format.
+version: '3.8'
+
+# Define the services (containers) for the application.
+services:
+
+  # MongoDB service
+  mongo:
+    container_name: mongo
+    image: mongo:6  # משתמש ב-version קבוע במקום latest
+    restart: unless-stopped  # מבטיח שהקונטיינר יחזור לעבוד אחרי הפסקות
+    ports:
+      - "27017:27017"
+    volumes:
+      # Use a named volume to persist data across container restarts.
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  # Kafka service
+  kafka:
+    container_name: kafka
+    image: bitnami/kafka:3.7
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+    environment:
+      # Kafka configuration as specified in the original deployment YAML.
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    networks:
+      - app-network
+
+  # Retriever microservice
+  retriever:
+    container_name: retriever
+    build:
+      # The build context points to the root of the Retriever service.
+      context: ./services/Retriever
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file: .env  # טוען הגדרות מקובץ .env
+    environment:
+      # Environment variables for Kafka and MongoDB Atlas connection.
+      - KAFKA_BOOTSTRAP=kafka:9092
+      # מעביר את משתני הסביבה עם השמות הנכונים
+      - MONGO_URI=${MONGO_URI_EXTERNAL}
+      - USER=${MONGO_USER}
+      - PASS=${MONGO_PASS}
+      - DB_NAME=${DB_NAME}
+      - COLLECTION=${COLLECTION}
+    networks:
+      - app-network
+    depends_on:
+      - kafka
+      - mongo
+    command: python app/main.py
+
+  # Preprocessor microservice
+  preprocessor:
+    container_name: preprocessor
+    build:
+      context: ./services/Preprocessor
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - KAFKA_BOOTSTRAP=kafka:9092
+    networks:
+      - app-network
+    depends_on:
+      - kafka
+    command: python app/main.py
+
+  # Enricher microservice
+  enricher:
+    container_name: enricher
+    build:
+      context: ./services/Enricher
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      - KAFKA_BOOTSTRAP=kafka:9092
+    networks:
+      - app-network
+    depends_on:
+      - kafka
+    command: python app/main.py
+
+  # Persister microservice
+  persister:
+    container_name: persister
+    build:
+      context: ./services/Persister
+    restart: unless-stopped
+    ports:
+      - "8003:8003"
+    env_file: .env
+    environment:
+      - KAFKA_BOOTSTRAP=kafka:9092
+      - MONGO_URI=${MONGO_URI_LOCAL}  # משתמש ב-MongoDB המקומי
+      - MONGO_DB=${MONGO_DB}
+    networks:
+      - app-network
+    depends_on:
+      - kafka
+      - mongo
+    command: python app/main.py
+
+  # DataRetrieval microservice
+  data-retrieval:
+    container_name: data-retrieval
+    build:
+      context: ./services/DataRetrieval
+    restart: unless-stopped
+    ports:
+      - "8004:8004"
+    env_file: .env
+    environment:
+      - MONGO_URI=${MONGO_URI_LOCAL}  # משתמש ב-MongoDB המקומי
+      - MONGO_DB=${MONGO_DB}
+    networks:
+      - app-network
+    depends_on:
+      - mongo
+    command: python app/main.py
+
+# Define named volumes for data persistence.
+volumes:
+  mongo-data:
+
+# Define a custom network to ensure all services can communicate.
+networks:
+  app-network:
+    driver: bridge

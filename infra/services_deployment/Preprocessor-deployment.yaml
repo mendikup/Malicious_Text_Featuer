@@ -20,7 +20,15 @@ spec:
         imagePullPolicy: Always
         env:
           - name: KAFKA_BOOTSTRAP
-            value: kafka:9092
+            value: kafka:9092 # Kafka broker address
+          - name: RAW_TWEETS_ANTISEMITIC
+            value: raw_tweets_antisemitic # source topic for antisemitic tweets
+          - name: RAW_TWEETS_NOT_ANTISEMITIC
+            value: raw_tweets_not_antisemitic # source topic for non-antisemitic tweets
+          - name: PREPROCESSED_TWEETS_ANTISEMITIC
+            value: preprocessed_tweets_antisemitic # target topic for cleaned antisemitic tweets
+          - name: PREPROCESSED_TWEETS_NOT_ANTISEMITIC
+            value: preprocessed_tweets_not_antisemitic # target topic for cleaned non-antisemitic tweets
         ports:
         - containerPort: 8001
           name: preprocessor

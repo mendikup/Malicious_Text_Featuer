@@ -23,7 +23,7 @@ for name, path in resources.items():
 
 # Force-load corpora to avoid LazyLoader bugs
 _ = stopwords.words("english")
-_ = wordnet.synsets("dog")  # מפעיל את wordnet וה־omw
+_ = wordnet.synsets("dog")  #ensure wordnet and OMW resources are loaded
 lemmatizer = WordNetLemmatizer()
 _ = lemmatizer.lemmatize("dogs")
 

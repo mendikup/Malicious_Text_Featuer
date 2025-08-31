@@ -4,10 +4,7 @@ import os
 
 class Dal:
     def __init__(self):
-        """
-        initialize with the database name from env variable
-        and the name of the collection to work with
-        """
+        """Initialize the target database from environment variables."""
         self.db = None
         self.database = os.getenv("MONGO_DB", "mydb")
 

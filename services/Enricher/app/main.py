@@ -5,6 +5,7 @@ from manager import Manager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Start background processing when the service starts."""
     print("the Enricher server started")
     m = Manager()
     m.run()
